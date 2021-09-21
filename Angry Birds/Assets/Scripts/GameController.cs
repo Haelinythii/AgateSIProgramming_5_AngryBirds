@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class GameController : MonoBehaviour
     public List<Enemy> enemies;
     public TrailController trailController;
     public BoxCollider2D tapCollider;
+    public GameObject WinPanel, LosePanel;
 
     private Bird shotBird;
     private bool isGameEnded = false;
@@ -39,10 +41,16 @@ public class GameController : MonoBehaviour
 
         birds.RemoveAt(0);
 
-        if(birds.Count > 0)
+        if(birds.Count > 0) //kalau masih ada bird yang bisa dilontarkan
         {
             slingShooter.InitiateBird(birds[0]);
             shotBird = birds[0];
+        }
+        else //kalau bird udah habis berarti kalah
+        {
+            Debug.Log("kalah woi");
+            StartCoroutine(ShowPanel(LosePanel));
+            isGameEnded = true;
         }
     }
 
@@ -67,8 +75,15 @@ public class GameController : MonoBehaviour
         if(enemies.Count == 0)
         {
             Debug.Log("menang woi");
+            StartCoroutine(ShowPanel(WinPanel));
             isGameEnded = true;
         }
+    }
+
+    private IEnumerator ShowPanel(GameObject panel)
+    {
+        yield return new WaitForSeconds(2f);
+        panel.SetActive(true);
     }
 
     private void OnMouseUp()
