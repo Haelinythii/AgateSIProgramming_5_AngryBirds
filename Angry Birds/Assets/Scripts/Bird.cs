@@ -13,6 +13,7 @@ public class Bird : MonoBehaviour
     private BirdState state;
     private float minVelocity = 0.05f;
     private bool flagDestroy = false;
+    protected SpriteRenderer birdSpriteRenderer;
 
     public UnityAction OnBirdDestroyed = delegate { };
     public UnityAction<Bird> OnBirdShot = delegate { };
@@ -21,6 +22,7 @@ public class Bird : MonoBehaviour
 
     private void Start()
     {
+        birdSpriteRenderer = GetComponent<SpriteRenderer>();
         birdRigidbody.bodyType = RigidbodyType2D.Kinematic;
         birdCollider.enabled = false;
         state = BirdState.Idle;
@@ -40,7 +42,7 @@ public class Bird : MonoBehaviour
         }
     }
 
-    private IEnumerator DestroyAfter(float timeInSecond)
+    protected IEnumerator DestroyAfter(float timeInSecond)
     {
         yield return new WaitForSeconds(timeInSecond);
         Destroy(gameObject);
@@ -71,7 +73,7 @@ public class Bird : MonoBehaviour
             OnBirdDestroyed();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         state = BirdState.HitSomething;
     }
